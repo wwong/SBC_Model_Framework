@@ -114,6 +114,8 @@ plug(-80,150,0,"top","small_encl_satapwr",0);
 linear_extrude(height = 1) {translate([-80,140,0]) text("small_encl_satapwr",size=5, halign="left");}
 plug(-80,175,0,"top","molex_4x1",0);
 linear_extrude(height = 1) {translate([-80,165,0]) text("molex_4x1",size=5, halign="left");}
+plug(-80,200,0,"top","pwr5.5_9.5x11",0);
+linear_extrude(height = 1) {translate([-80,190,0]) text("pwr5.5_9.5_11",size=5, halign="left");}
 
 // usb2 class
 linear_extrude(height = 2) {translate([-10,-5,0]) rotate([0,0,90]) text("usb2", size=8, halign="right");}

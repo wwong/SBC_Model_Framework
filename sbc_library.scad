@@ -404,6 +404,21 @@ module plug(x,y,rotation,side,type,pcbsize_z) {
             cylinder(d=1.4, h=8.5,$fn=30);
         }
     }
+    // 5.5mm power plug 9.5x11
+    if(type=="pwr5.5_9.5x11") {
+        size_x = 9.5;
+        size_y = 15;
+        place(x,y,size_x,size_y,rotation,side,type,pcbsize_z)
+        union() {
+            difference () {
+                color("silver") translate([0,0,0]) cube([size_x, size_y, 11]);
+                color("black") translate([4.75,8.49,7]) rotate([90,0,0])
+                cylinder(r=3, h=8.5, $fn=30);
+            }
+            color("white") translate([4.75,8.5,7]) rotate([90,0,0])
+            cylinder(d=1.4, h=8.5,$fn=30);
+        }
+    }
 
     // rtc micro connector type
     if(type=="rtc_micro") {
@@ -770,6 +785,25 @@ module network(x,y,rotation,side,type,pcbsize_z) {
             }
             color("green") translate([2.5,-.1,23.5]) cube([3, 2, 2]);
             color("orange") translate([11.5,-.1,23.5]) cube([3, 2, 2]);
+        }
+    }
+    if (type=="sfp_single") {
+        size_x=14.6;
+        size_y=48.75;
+        size_z=9.55;
+        thickness=0.3;
+        place(x, y, size_x, size_y, rotation, side, type, pcbsize_z)
+        union() {
+            difference () {
+                color("lightgray") translate([0,0,0]) cube([size_x, size_y, size_z]);
+                color("darkgray")  translate([thickness,-thickness,thickness]) cube([14, 47.5, 8.95]); // Taken from SFF-8432 rev 5.2a
+                for (y_offset = [0:8.5:25.5]) {
+                    color("darkgray") translate([3.3,          size_y - 3 - y_offset, size_z-thickness]) cylinder(2*thickness, d=1.75);
+                    color("darkgray") translate([size_x - 3.3, size_y - 3 - y_offset, size_z-thickness]) cylinder(2*thickness, d=1.75);
+                    color("darkgray") translate([size_x/2,     size_y - 7 - y_offset, size_z-thickness]) cylinder(2*thickness, d=1.75);
+                }
+            }
+            color("lightgray") translate([size_x/2 - 2.5, 0, 0]) cube([5, 5, 0.75]);
         }
     }
 }
@@ -1906,7 +1940,7 @@ module misc(x,y,rotation,side,type,pcbsize_z) {
 }
 
 // heatsink class
-module heatsink(x,y,rotation,side,type,pcbsize_z,soc1size_z) {
+module heatsink(x,y,rotation,side,type,pcbsize_z,soc1size_z, soc2size_z) {
     // type c series
     if(type=="hc4_oem" || type=="c4_oem" || type=="c2_oem" || type=="c1+_oem") {
         size_x = 58;
@@ -2128,6 +2162,42 @@ module heatsink(x,y,rotation,side,type,pcbsize_z,soc1size_z) {
         size_y = 56;                
         place(x,y,size_x,size_y,rotation,side,type,pcbsize_z+soc1size_z)
         color("gray",.6) import("Radxa_Heatsink.stl", convexity=3);
+    }
+    if (type=="generic_20x20") {
+        size_x = 20;
+        size_y = 20;
+        size_z = 11;
+        fin_count = 15;
+        fin_width = 0.3;
+        base_height = 2.5;
+        fin_offset = (size_x-(fin_count*fin_width))/(fin_count-1);
+        place(x,y,size_x,size_y,rotation,side,type,pcbsize_z+soc1size_z)
+        color("gold")
+        union() {
+            cube([size_x, size_y, base_height]);
+            for (i=[0:fin_count-1]) {
+                translate([i*(fin_offset+fin_width), 0, 0]) cube([fin_width, size_y, size_z]);
+            }
+        }
+    }
+    if (type=="bottom_soc2_generic_30x30") {
+        size_x = 30;
+        size_y = 30;
+        size_z = 11.67;
+        fin_count = 7;
+        fin_width = 1.65;
+        base_height = 2.5;
+        fin_offset = (size_x-(fin_count*fin_width))/(fin_count-1);
+        place(x,y,size_x,size_y,rotation,side,type,pcbsize_z+soc2size_z)
+        // hack hack hack: z-offset is ignored when placing a component on the bottom
+        translate([0, 0, soc2size_z])
+        color("gold")
+        union() {
+            cube([size_x, size_y, base_height]);
+            for (i=[0:fin_count-1]) {
+                translate([i*(fin_offset+fin_width), 0, 0]) cube([fin_width, size_y, size_z]);
+            }
+        }
     }
 }
 

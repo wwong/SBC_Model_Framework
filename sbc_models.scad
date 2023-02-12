@@ -99,7 +99,7 @@ module sbc(model) {
             }
             if (soc1_side == "bottom") {               
                 color("dimgray",1) 
-                    translate([soc1loc_x,soc1loc_y,-pcbsize_z]) 
+                    translate([soc1loc_x,soc1loc_y,-soc1size_z])
                         rotate([0,0,soc1_rotation]) 
                             cube([soc1size_x,soc1size_y,soc1size_z]);
             }
@@ -202,7 +202,7 @@ module sbc(model) {
         }   
         if (class == "heatsink") {
             if (loc_x!=0 || loc_y!=0) {
-                heatsink(loc_x,loc_y,rotation,side,type,pcbsize_z,sbc_data[s[0]][39]);
+                heatsink(loc_x,loc_y,rotation,side,type,pcbsize_z,sbc_data[s[0]][39], sbc_data[s[0]][47]);
             }   
         }
         if (class == "pcie") {
@@ -227,4 +227,3 @@ module sbc(model) {
         }
     }
 }   
-  
